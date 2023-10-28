@@ -1,6 +1,7 @@
 import org.w3c.dom.ls.LSOutput;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Stream;
@@ -14,6 +15,8 @@ public class BlockGame {
 
     public void startGame() {
 
+        // InputMismatchException 예외처리하기 (2곳)
+
         Starting:
         while(true) {
 
@@ -23,7 +26,7 @@ public class BlockGame {
             }
 
             System.out.println();
-            System.out.println("============= Block Game ============");
+            System.out.println("============= BLOCK GAME ============");
             System.out.println("         \uD83E\uDD16 똑똑이 블럭 게임 \uD83E\uDD16         ");
             System.out.println("=====================================");
             System.out.print("\uD83E\uDD16 닉네임 입력: ");
@@ -74,10 +77,10 @@ public class BlockGame {
 
     public void runGame() {
 
-        int number;
-
         Running:
         while(true) {
+
+            int number;
 
             System.out.println("=====================================");
             System.out.println("\uD83E\uDD16 상대방의 블럭 및 좌표(행/열)를 순서대로 숫자만 입력해주세요.");
@@ -85,7 +88,7 @@ public class BlockGame {
             System.out.print(": ");
             number = sc.nextInt();
 
-            if((int)(Math.log10(number)+1) != 3) { // 유효성 추가 예정: number가 int인지, 놓을 수 있는지
+            if((int)(Math.log10(number)+1) != 3) {
                 boolean check = true;
                 while(check == true) {
                     System.out.println("\uD83E\uDD16 올바르지 않습니다. 다시 입력해주세요.");
@@ -102,8 +105,11 @@ public class BlockGame {
             boolean isPossible = checkBoard(arrNum[0], arrNum[1], arrNum[2]);
 
             if(!isPossible) {
-                System.out.println("\uD83E\uDD16 상대방의 블록을 해당 좌표에 둘 수 없습니다. Game Over. You're a winner! \uD83C\uDF89");
-                break Running; // +break Starting;
+                System.out.println("\uD83E\uDD16 상대방의 블럭을 해당 좌표에 둘 수 없습니다." + nickname + "님의 승리! \uD83C\uDF89");
+                System.out.println("============= GAME OVER ============");
+                System.out.println();
+                System.out.println();
+                break Running;
             } else {
                 System.out.println("=====================================");
                 System.out.println("\uD83E\uDD16 상대방이 " + arrNum[0] + "번 블럭을 " + arrNum[1] + "행, " + arrNum[2] + "열에 두었고,");
@@ -115,7 +121,11 @@ public class BlockGame {
 
             /* 현재 board + 상대방 좌표 + 알고리즘 좌표를 추가한 board 출력 */
             if(result[0] == 0 && result[1] == 0 && result[2] == 0) {
-                System.out.println(nickname + "님이 두실 공간이 없습니다 T^T Loooooooooose");
+                System.out.println("\uD83E\uDD16 더이상 " + nickname + "님의 블럭을 둘 공간이 없습니다. 상대방의 승리.. \uD83D\uDE2D");
+                System.out.println("============= GAME OVER ============");
+                System.out.println();
+                System.out.println();
+                break Running;
             } else {
                 System.out.println("\uD83E\uDD16 " + nickname + "님은 " + result[0] + "번 블럭을 " + result[1] + "행, " + result[2] + "열에 두었습니다.");
                 setBoard(result[0], result[1], result[2]);
@@ -162,6 +172,7 @@ public class BlockGame {
     /* 최선의 블럭/좌표를 찾아내기 위한 메소드 */
     public int[] findTheBestWay() {
 
+        // 현재 가능한 모든 경우의 수 List
         List<List<int[]>> allXys = new ArrayList<>();
 
         // 각 블럭마다 반복문을 돌려서 경우의 수(List.size())를 구해야 하는 메소드를 따로 선언하기 (tempBoard에 넣고나서의 경우의 수도 구해야하므로)
@@ -176,8 +187,11 @@ public class BlockGame {
 
         for(int i = 0; i < allXys.size(); i++) {
             List<int[]> xys = allXys.get(i);
+//            System.out.println("지금 i (i는 4까지 증가해야함) => " + i + " --------------------------------------------------------");
             for(int j = 0; j < xys.size(); j++) {
+//                System.out.println("지금 j (j는 배열의 갯수만큼 증가해야함) => " + j);
                 int casesCount = predictNext(i + 1, xys.get(j));
+//                System.out.println("현재 predictNext()를 타고 다녀온 블럭/좌표/경우의 수 => " + (i+1) + "/" + xys.get(j)[0] + xys.get(j)[1] + "/" + casesCount);
                 // casesCount가 이전보다 작다면, minCasesCount에 저장하고, minCasesCount가 저장된 시점의 index와 xy 또한 함께 변수에 저장
                 if (casesCount < minCasesCount) {
                     minCasesCount = casesCount;
@@ -185,26 +199,26 @@ public class BlockGame {
                     way[1] = xys.get(j)[0];
                     way[2] = xys.get(j)[1];
                 }
-                System.out.println("현재 가장 작은 case 개수 : " + minCasesCount);
-                System.out.println("            그때의 좌표 : " + way[0] + way[1] + way[2]);
+//                System.out.println("현재 가장 작은 case 개수 : " + minCasesCount);
+//                System.out.println("            그때의 좌표 : " + way[0] + way[1] + way[2]);
             }
         }
 
         // [테스트] 좌표 출력용
-        int blockNum = 1;
-        for(List<int[]> o : allXys) {
-            System.out.println();
-            System.out.println("[TEST] 현재 가능 좌표 출력 -------------------------------" + blockNum + "번 블럭");
-            for(int[] oo : o) {
-                for(int ooo : oo) {
-                    System.out.print(ooo);
-                }
-                System.out.print(", ");
-            } blockNum++;
-
-        }
-        System.out.println();
-        System.out.println();
+//        int blockNum = 1;
+//        for(List<int[]> o : allXys) {
+//            System.out.println();
+//            System.out.println("[TEST] 현재 가능 좌표 출력 -------------------------------" + blockNum + "번 블럭");
+//            for(int[] oo : o) {
+//                for(int ooo : oo) {
+//                    System.out.print(ooo);
+//                }
+//                System.out.print(", ");
+//            } blockNum++;
+//
+//        }
+//        System.out.println();
+//        System.out.println();
 
         // way가 없을 경우, [0, 0, 0] 반환하여 패배
         return way;
@@ -230,7 +244,7 @@ public class BlockGame {
             }
         } else {
             int blockIndex = 0;
-            for(int i = 0; i < 5; i++) { // 5여야함
+            for(int i = 0; i < 5; i++) {
                 if(i == xy[0] || i == xy[0]+1) {
                     for(int j = xy[1]; j < xy[1]+2; j++) {
                         if(blocks[blockNum-1][blockIndex++] == 1) {
@@ -241,28 +255,24 @@ public class BlockGame {
             }
         }
 
-        // [테스트] tempBoard 출력용
-//        System.out.println("========== TEMP BOARD =========");
-//        System.out.println("    0 1 2 3 4");
-//        for(int i = 0; i < 5; i++) {
-//            System.out.print(i + " [ ");
-//            for(int j = 0; j < 5; j++) {
-//                System.out.print(tempBoard[i][j] + " ");
-//            }
-//            System.out.println("]");
-//        }
+        // [임시] tempBoard 출력용
+        System.out.println("============ tempBoard ==============");
+        System.out.println("    0 1 2 3 4");
+        for(int i = 0; i < 5; i++) {
+            System.out.print(i + " [ ");
+            for(int j = 0; j < 5; j++) {
+                System.out.print(tempBoard[i][j] + " ");
+            }
+            System.out.println("]");
+        }
 
         List<int[]> xys = collectXys(blockNum, tempBoard);
 
-        int casesCount = xys.size();
-
-        System.out.println("caseCount의 개수 확인 => " + casesCount);
-
-        return casesCount;
+        return xys.size(); // 경우의 수
 
     }
 
-    /* 각 block마다 현재 board에 가능한 좌표들을 List로 반환하는 메소드 */
+    /* 각 block마다 현재 board에 가능한 좌표(경우의 수)들을 List로 반환하는 메소드 */
     public List<int[]> collectXys(int blockNum, char[][] board) {
 
         List<int[]> xys = new ArrayList<>();
