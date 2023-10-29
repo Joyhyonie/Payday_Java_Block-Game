@@ -9,7 +9,8 @@ import java.util.stream.Stream;
 public class BlockGame {
 
     Scanner sc = new Scanner(System.in);
-    static char[][] board = new char[5][5];
+    static final int SIZE = 5;
+    static char[][] board = new char[SIZE][SIZE];
     static int[][] blocks = {{1, 1, 1}, {0, 1, 1, 1}, {1, 0, 1, 1}, {1, 1, 1, 0}, {1, 1, 0, 1}};
     static String nickname;
 
@@ -20,37 +21,46 @@ public class BlockGame {
         Starting:
         while(true) {
 
-            /* board 생성 */
-            for(int i = 0; i < 5; i++) {
-                for(int j = 0; j < 5; j++) board[i][j] = 'o';
+            // board 생성
+            for(int i = 0; i < SIZE; i++) {
+                for(int j = 0; j < SIZE; j++) board[i][j] = 'o';
             }
 
+            System.out.println();
+            System.out.println();
             System.out.println();
             System.out.println("============= BLOCK GAME ============");
             System.out.println("         \uD83E\uDD16 똑똑이 블럭 게임 \uD83E\uDD16         ");
             System.out.println("=====================================");
-            System.out.print("\uD83E\uDD16 닉네임 입력: ");
-            nickname = sc.next();
-            System.out.println("=====================================");
-            // 1. 선공 or 후공 선택
             System.out.println("[1] 선공");
             System.out.println("[2] 후공");
             System.out.println("[0] 끝내기");
             System.out.println("=====================================");
             System.out.print("\uD83E\uDD16 번호 입력: ");
             int turn = sc.nextInt();
+            System.out.println("=====================================");
+
+            if(turn == 0) {
+                System.out.println("\uD83E\uDD16 게임을 종료합니다.");
+                sc.close();
+                break Starting;
+            }
+
+            System.out.print("\uD83E\uDD16 닉네임 입력: ");
+            nickname = sc.next();
 
             switch (turn) {
                 case 1: firstTurn(); break;
                 case 2: runGame(); break;
-                case 0: System.out.println("\uD83E\uDD16 게임을 종료합니다."); sc.close(); break Starting;
                 default: System.out.println("\uD83E\uDD16 입력이 올바르지 않습니다. 처음부터 다시 입력해주세요"); break;
             }
+
+
         }
 
     }
 
-    /* 첫 선공, 랜덤한 블럭&좌표 지정 후 board 출력 */
+    /* 첫 선공, 랜덤한 블럭&좌표 지정 후 board를 출력하기 위한 메소드 */
     public void firstTurn() {
 
         int blockNum = (int)(Math.random() * 5) + 1;
@@ -67,14 +77,12 @@ public class BlockGame {
         System.out.println("=====================================");
         System.out.println("\uD83E\uDD16 " + nickname + "님이 " + blockNum + "번 블럭을 " + row + "행, " + col + "열에 두었습니다.");
 
-        /* set block on the board */
-        setBoard(blockNum, row, col);
-        /* print the board */
+        setBoard(blockNum, row, col, board);
         printBoard();
-        /* 본격 게임 실행 */
         runGame();
     }
 
+    /* 게임 진행 시, 지속적으로 반복되는 메소드 */
     public void runGame() {
 
         Running:
@@ -101,42 +109,48 @@ public class BlockGame {
             /* 상대방 블럭 체크 */
             // 입력받은 number의 각 index를 구하기 위한 arr
             int[] arrNum = Stream.of(String.valueOf(number).split("")).mapToInt(Integer::parseInt).toArray();
-            // 단순 유효 블럭 체크
+
+            // 유효 블럭 확인
             boolean isPossible = checkBoard(arrNum[0], arrNum[1], arrNum[2]);
 
             if(!isPossible) {
-                System.out.println("\uD83E\uDD16 상대방의 블럭을 해당 좌표에 둘 수 없습니다." + nickname + "님의 승리! \uD83C\uDF89");
+                System.out.println("\uD83E\uDD16 상대방의 블럭을 해당 좌표에 둘 수 없습니다. " + nickname + "님의 승리! \uD83C\uDF89");
                 System.out.println("============= GAME OVER ============");
-                System.out.println();
-                System.out.println();
                 break Running;
             } else {
                 System.out.println("=====================================");
                 System.out.println("\uD83E\uDD16 상대방이 " + arrNum[0] + "번 블럭을 " + arrNum[1] + "행, " + arrNum[2] + "열에 두었고,");
-                setBoard(arrNum[0], arrNum[1], arrNum[2]);
+                setBoard(arrNum[0], arrNum[1], arrNum[2], board);
             }
 
-            /* 나의 최적화된 블럭/좌표 찾기 */
+            /* 나의 최선 블럭 및 좌표 찾기 */
             int[] result = findTheBestWay();
 
-            /* 현재 board + 상대방 좌표 + 알고리즘 좌표를 추가한 board 출력 */
+            /* 현재 board에 나와 상대방의 블럭 및 좌표를 추가한 board 출력 */
             if(result[0] == 0 && result[1] == 0 && result[2] == 0) {
                 System.out.println("\uD83E\uDD16 더이상 " + nickname + "님의 블럭을 둘 공간이 없습니다. 상대방의 승리.. \uD83D\uDE2D");
                 System.out.println("============= GAME OVER ============");
-                System.out.println();
-                System.out.println();
                 break Running;
             } else {
                 System.out.println("\uD83E\uDD16 " + nickname + "님은 " + result[0] + "번 블럭을 " + result[1] + "행, " + result[2] + "열에 두었습니다.");
-                setBoard(result[0], result[1], result[2]);
+                setBoard(result[0], result[1], result[2], board);
                 printBoard();
+
+                // setBoard 후, 상대방이 놓을 곳이 없다면, 나의 승리
+                result = findTheBestWay();
+                if(result[0] == 0 && result[1] == 0 && result[2] == 0) {
+                    System.out.println("=====================================");
+                    System.out.println("\uD83E\uDD16 더이상 상대방의 블럭을 둘 공간이 없습니다. " + nickname + "님의 승리! \uD83C\uDF89");
+                    System.out.println("============= GAME OVER ============");
+                    break Running;
+                }
             }
 
         }
 
     }
 
-    /* board에 block이 들어갈 수 있는지 check하기 위한 메소드 */
+    /* board에 들어갈 수 있는 유효한 block인지 확인하기 위한 메소드 */
     public boolean checkBoard(int blockNum, int row, int col) {
 
         int count = 0;
@@ -169,7 +183,7 @@ public class BlockGame {
         return count > 0 ? false : true;
     }
 
-    /* 최선의 블럭/좌표를 찾아내기 위한 메소드 */
+    /* 최선의 블럭 및 좌표를 찾아내기 위한 메소드 */
     public int[] findTheBestWay() {
 
         // 현재 가능한 모든 경우의 수 List
@@ -187,11 +201,9 @@ public class BlockGame {
 
         for(int i = 0; i < allXys.size(); i++) {
             List<int[]> xys = allXys.get(i);
-//            System.out.println("지금 i (i는 4까지 증가해야함) => " + i + " --------------------------------------------------------");
             for(int j = 0; j < xys.size(); j++) {
-//                System.out.println("지금 j (j는 배열의 갯수만큼 증가해야함) => " + j);
                 int casesCount = predictNext(i + 1, xys.get(j));
-//                System.out.println("현재 predictNext()를 타고 다녀온 블럭/좌표/경우의 수 => " + (i+1) + "/" + xys.get(j)[0] + xys.get(j)[1] + "/" + casesCount);
+                // System.out.println("현재 predictNext()를 타고 다녀온 블럭/좌표/경우의 수 => " + (i+1) + "/" + xys.get(j)[0] + xys.get(j)[1] + "/" + casesCount);
                 // casesCount가 이전보다 작다면, minCasesCount에 저장하고, minCasesCount가 저장된 시점의 index와 xy 또한 함께 변수에 저장
                 if (casesCount < minCasesCount) {
                     minCasesCount = casesCount;
@@ -199,80 +211,34 @@ public class BlockGame {
                     way[1] = xys.get(j)[0];
                     way[2] = xys.get(j)[1];
                 }
-//                System.out.println("현재 가장 작은 case 개수 : " + minCasesCount);
-//                System.out.println("            그때의 좌표 : " + way[0] + way[1] + way[2]);
             }
         }
-
-        // [테스트] 좌표 출력용
-//        int blockNum = 1;
-//        for(List<int[]> o : allXys) {
-//            System.out.println();
-//            System.out.println("[TEST] 현재 가능 좌표 출력 -------------------------------" + blockNum + "번 블럭");
-//            for(int[] oo : o) {
-//                for(int ooo : oo) {
-//                    System.out.print(ooo);
-//                }
-//                System.out.print(", ");
-//            } blockNum++;
-//
-//        }
-//        System.out.println();
-//        System.out.println();
 
         // way가 없을 경우, [0, 0, 0] 반환하여 패배
         return way;
 
     }
 
+    /* tempBoard를 활용하여 다음의 경우의 수를 예측하기 위한 메소드 */
     public int predictNext(int blockNum, int[] xy) {
 
-        char[][] tempBoard = new char[5][5];
+        char[][] tempBoard = new char[SIZE][SIZE];
         // 2차원 배열 깊은 복사의 경우, for loop안에서 clone() 해야함
         for(int i = 0; i < board.length; i++) {
             tempBoard[i] = board[i].clone();
         }
 
-        // [임시] tempBoard용 setBoard()
-        if(blockNum == 1) {
-            for(int i = 0; i < 5; i++) {
-                if(i == xy[0]) {
-                    for(int j = xy[1]; j < xy[1]+3; j++) {
-                        tempBoard[i][j] = 'x';
-                    } break;
-                }
-            }
-        } else {
-            int blockIndex = 0;
-            for(int i = 0; i < 5; i++) {
-                if(i == xy[0] || i == xy[0]+1) {
-                    for(int j = xy[1]; j < xy[1]+2; j++) {
-                        if(blocks[blockNum-1][blockIndex++] == 1) {
-                            tempBoard[i][j] = 'x';
-                        }
-                    }
-                }
-            }
-        }
+        // setBoard()를 통해 tempBoard 완성
+        setBoard(blockNum, xy[0], xy[1], tempBoard);
 
-        // [임시] tempBoard 출력용
-        System.out.println("============ tempBoard ==============");
-        System.out.println("    0 1 2 3 4");
-        for(int i = 0; i < 5; i++) {
-            System.out.print(i + " [ ");
-            for(int j = 0; j < 5; j++) {
-                System.out.print(tempBoard[i][j] + " ");
-            }
-            System.out.println("]");
-        }
-
+        // collectXys()를 통해 tempBoard의 경우의 수 구하기
         List<int[]> xys = collectXys(blockNum, tempBoard);
 
         return xys.size(); // 경우의 수
 
     }
 
-    /* 각 block마다 현재 board에 가능한 좌표(경우의 수)들을 List로 반환하는 메소드 */
+    /* 각 block별,현재 board에 둘 수 있는 좌표(경우의 수)들을 List로 반환하기 위한 메소드 */
     public List<int[]> collectXys(int blockNum, char[][] board) {
 
         List<int[]> xys = new ArrayList<>();
@@ -303,8 +269,8 @@ public class BlockGame {
 
     }
 
-    /* board에 block을 단순 set하기위한 메소드 */
-    public void setBoard(int blockNum, int row, int col) {
+    /* board에 block을 두기 위한 메소드 */
+    public void setBoard(int blockNum, int row, int col, char[][] board) {
 
         if(blockNum == 1) {
             for(int i = 0; i < 5; i++) {
@@ -316,10 +282,10 @@ public class BlockGame {
             }
         } else {
             int blockIndex = 0;
-            for(int i = 0; i < 5; i++) { // 5여야함
+            for(int i = 0; i < 5; i++) {
                 if(i == row || i == row+1) {
                     for(int j = col; j < col+2; j++) {
-                        if(blocks[blockNum-1][blockIndex++] == 1) { // 현재 여기서 Array exception 발생중
+                        if(blocks[blockNum-1][blockIndex++] == 1) {
                             board[i][j] = 'x';
                         }
                     }
@@ -329,7 +295,7 @@ public class BlockGame {
 
     }
 
-    /* board를 출력하기위한 메소드 */
+    /* board를 출력하기 위한 메소드 */
     public void printBoard() {
 
         System.out.println("=====================================");
