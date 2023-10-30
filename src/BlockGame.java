@@ -221,14 +221,14 @@ public class BlockGame {
         }
 
         // 블럭(allXys의 순서)당 좌표(xys의 요소) 하나하나, board에 넣고(tempBoard) 거기서 collectXys()를 호출하여 tempBoard의 경우의 수 추출 후 count해서 반환(casesCount)
-        int minCasesCount = 20;
+        int minCasesCount = 79;
         int[] way = new int[3];
 
         for(int i = 0; i < allXys.size(); i++) {
             List<int[]> xys = allXys.get(i);
             for(int j = 0; j < xys.size(); j++) {
-                int casesCount = predictNext(i + 1, xys.get(j));
-                // System.out.println("현재 predictNext()를 타고 다녀온 블럭/좌표/경우의 수 => " + (i+1) + "/" + xys.get(j)[0] + xys.get(j)[1] + "/" + casesCount);
+                int casesCount = predictNext(i + 1, xys.get(j), board);
+                 System.out.println("현재 predictNext()를 타고 다녀온 블럭/좌표/경우의 수 => " + (i+1) + "/" + xys.get(j)[0] + xys.get(j)[1] + "/" + casesCount);
                 // casesCount가 이전보다 작다면, minCasesCount에 저장하고, minCasesCount가 저장된 시점의 index와 xy 또한 함께 변수에 저장
                 if (casesCount < minCasesCount) {
                     minCasesCount = casesCount;
@@ -244,9 +244,10 @@ public class BlockGame {
 
     }
 
-    // int로 xys.size()를 넘겨줄 것이 아닌,
     /* tempBoard를 활용하여 다음의 경우의 수를 예측하기 위한 메소드 */
-    public int predictNext(int blockNum, int[] xy) {
+    public int predictNext(int blockNum, int[] xy, char[][] board) {
+
+        /* 재귀를 해야하는가? */
 
         char[][] tempBoard = new char[SIZE][SIZE];
         // 2차원 배열 깊은 복사의 경우, for loop안에서 clone() 해야함
@@ -257,17 +258,23 @@ public class BlockGame {
         // setBoard()를 통해 tempBoard 완성
         setBoard(blockNum, xy[0], xy[1], tempBoard);
 
+        // tempBoard에서 가능한 모든 경우의 수 List
+        List<List<int[]>> tempAllXys = new ArrayList<>();
+        // 경우의 수(갯수)
+        int casesCount = 0;
+
         // collectXys()를 통해 tempBoard의 경우의 수 구하기
-        List<int[]> xys = collectXys(blockNum, tempBoard);
+        for(int tempBlockNum = 1; tempBlockNum <= 5; tempBlockNum++) {
+            List<int[]> xys = collectXys(tempBlockNum, tempBoard);
+            tempAllXys.add(xys);
+        }
 
-        // predictNext()을 재귀호출 -> board(tempBoard)를 함께 보내야함
-        // findTheBestWay() -> predictNext()/collectXys() -> n블럭/nm좌표의 가능 좌표 List 획득 -> 그 List로 다시 predictNext()/collecntXys() 호출
-        // 경우의 수를 다음 단계에서 count 하여 판단하는 것이 아닌,
-        // 재귀 호출을 통해 승패가 결정날 때까지의 모든 경우의 수를 판단.
-        // 현재 board에서 승률이 가장 높은 좌표를 선택.
-        // 진다? = [0, 0, 0]이 반환된다. = 더이상 둘 곳이 없다.
+        for(int i = 0; i < tempAllXys.size(); i++) {
+            List<int[]> xys = tempAllXys.get(i);
+            casesCount += xys.size();
+        }
 
-        return xys.size(); // 경우의 수
+        return casesCount;
 
     }
 
