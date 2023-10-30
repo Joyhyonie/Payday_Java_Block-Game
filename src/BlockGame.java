@@ -8,15 +8,13 @@ import java.util.stream.Stream;
 
 public class BlockGame {
 
-    Scanner sc = new Scanner(System.in);
+    Scanner sc = null;
     static final int SIZE = 5;
     static char[][] board = new char[SIZE][SIZE];
     static int[][] blocks = {{1, 1, 1}, {0, 1, 1, 1}, {1, 0, 1, 1}, {1, 1, 1, 0}, {1, 1, 0, 1}};
     static String nickname;
 
     public void startGame() {
-
-        // InputMismatchException 예외처리하기 (2곳)
 
         Starting:
         while(true) {
@@ -35,9 +33,24 @@ public class BlockGame {
             System.out.println("[1] 선공");
             System.out.println("[2] 후공");
             System.out.println("[0] 끝내기");
-            System.out.println("=====================================");
-            System.out.print("\uD83E\uDD16 번호 입력: ");
-            int turn = sc.nextInt();
+            int turn;
+
+            // InputMismatchException 예외처리
+            while(true) {
+
+                sc = new Scanner(System.in);
+
+                try {
+                    System.out.println("=====================================");
+                    System.out.print("\uD83E\uDD16 번호 입력: ");
+                    turn = sc.nextInt();
+                    break;
+                } catch (InputMismatchException e) {
+                    System.out.println("\uD83E\uDD16 문자는 입력할 수 없습니다. 다시 입력해주세요.");
+                }
+
+            }
+
             System.out.println("=====================================");
 
             if(turn == 0) {
@@ -52,9 +65,8 @@ public class BlockGame {
             switch (turn) {
                 case 1: firstTurn(); break;
                 case 2: runGame(); break;
-                default: System.out.println("\uD83E\uDD16 입력이 올바르지 않습니다. 처음부터 다시 입력해주세요"); break;
+                default: System.out.println("\uD83E\uDD16 번호가 올바르지 않습니다. 처음부터 다시 입력해주세요."); break;
             }
-
 
         }
 
@@ -89,21 +101,34 @@ public class BlockGame {
         while(true) {
 
             int number;
-
             System.out.println("=====================================");
             System.out.println("\uD83E\uDD16 상대방의 블럭 및 좌표(행/열)를 순서대로 숫자만 입력해주세요.");
-            System.out.println("(ex: 3번 블럭을 2행, 1열에 둠 => 321)");
-            System.out.print(": ");
-            number = sc.nextInt();
+            System.out.println("(ex: 3번 블럭을 2행, 1열에 둠 ▶ 321)");
 
-            if((int)(Math.log10(number)+1) != 3) {
-                boolean check = true;
-                while(check == true) {
-                    System.out.println("\uD83E\uDD16 올바르지 않습니다. 다시 입력해주세요.");
+            // InputMismatchException 예외처리 및 길이 검사
+            while(true) {
+
+                sc = new Scanner(System.in);
+
+                try {
                     System.out.print(": ");
                     number = sc.nextInt();
-                    check = (int)(Math.log10(number)+1) != 3;
+
+                    // 유효성 검사 (길이)
+                    if((int)(Math.log10(number)+1) != 3) {
+                        boolean check = true;
+                        while(check == true) {
+                            System.out.println("\uD83E\uDD16 번호가 올바르지 않습니다. 다시 입력해주세요.");
+                            System.out.print(": ");
+                            number = sc.nextInt();
+                            check = (int)(Math.log10(number)+1) != 3;
+                        }
+                    }
+                    break;
+                } catch (InputMismatchException e) {
+                    System.out.println("\uD83E\uDD16 문자는 입력할 수 없습니다. 다시 입력해주세요.");
                 }
+
             }
 
             /* 상대방 블럭 체크 */
