@@ -244,6 +244,7 @@ public class BlockGame {
 
     }
 
+    // int로 xys.size()를 넘겨줄 것이 아닌,
     /* tempBoard를 활용하여 다음의 경우의 수를 예측하기 위한 메소드 */
     public int predictNext(int blockNum, int[] xy) {
 
@@ -259,11 +260,18 @@ public class BlockGame {
         // collectXys()를 통해 tempBoard의 경우의 수 구하기
         List<int[]> xys = collectXys(blockNum, tempBoard);
 
+        // predictNext()을 재귀호출 -> board(tempBoard)를 함께 보내야함
+        // findTheBestWay() -> predictNext()/collectXys() -> n블럭/nm좌표의 가능 좌표 List 획득 -> 그 List로 다시 predictNext()/collecntXys() 호출
+        // 경우의 수를 다음 단계에서 count 하여 판단하는 것이 아닌,
+        // 재귀 호출을 통해 승패가 결정날 때까지의 모든 경우의 수를 판단.
+        // 현재 board에서 승률이 가장 높은 좌표를 선택.
+        // 진다? = [0, 0, 0]이 반환된다. = 더이상 둘 곳이 없다.
+
         return xys.size(); // 경우의 수
 
     }
 
-    /* 각 block별,현재 board에 둘 수 있는 좌표(경우의 수)들을 List로 반환하기 위한 메소드 */
+    /* 각 block별, 현재 board에 둘 수 있는 좌표(경우의 수)들을 List로 반환하기 위한 메소드 */
     public List<int[]> collectXys(int blockNum, char[][] board) {
 
         List<int[]> xys = new ArrayList<>();

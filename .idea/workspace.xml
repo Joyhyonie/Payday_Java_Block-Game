@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4f8ffbde-1f1e-44d2-8a59-f86cb5942fe8" name="Changes" comment="✅ Test: 최적의 경우의 수 테스트 완료">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="4f8ffbde-1f1e-44d2-8a59-f86cb5942fe8" name="Changes" comment="✅ Test: 예외처리 완료 및 전체 테스트 완료 (version 1)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/BlockGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BlockGame.java" afterDir="false" />
     </list>
@@ -56,7 +55,7 @@
       <workItem from="1698361439869" duration="19978000" />
       <workItem from="1698407074076" duration="1020000" />
       <workItem from="1698463388987" duration="17889000" />
-      <workItem from="1698620338301" duration="4108000" />
+      <workItem from="1698620338301" duration="8411000" />
     </task>
     <task id="LOCAL-00001" summary="✨ Feat: 선공 블럭 놓기 완료 및 메소드 모듈화">
       <option name="closed" value="true" />
@@ -90,7 +89,15 @@
       <option name="project" value="LOCAL" />
       <updated>1698480872879</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="✅ Test: 예외처리 완료 및 전체 테스트 완료 (version 1)">
+      <option name="closed" value="true" />
+      <created>1698641578155</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1698641578155</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -116,7 +123,8 @@
     <MESSAGE value="✨ Feat: 유효한 블럭 체크 완료" />
     <MESSAGE value=" Fix: 코드 수정" />
     <MESSAGE value="✅ Test: 최적의 경우의 수 테스트 완료" />
-    <option name="LAST_COMMIT_MESSAGE" value="✅ Test: 최적의 경우의 수 테스트 완료" />
+    <MESSAGE value="✅ Test: 예외처리 완료 및 전체 테스트 완료 (version 1)" />
+    <option name="LAST_COMMIT_MESSAGE" value="✅ Test: 예외처리 완료 및 전체 테스트 완료 (version 1)" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
