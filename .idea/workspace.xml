@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c25c9696-a27f-4d09-b393-041060035e8f" name="Changes" comment="🐛 Fix: 코드 보완 및 테스트 완료">
+    <list default="true" id="4f8ffbde-1f1e-44d2-8a59-f86cb5942fe8" name="Changes" comment="🧩 Algorithm: 알고리즘 개선 준비">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/BlockGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BlockGame.java" afterDir="false" />
     </list>
@@ -16,46 +16,129 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 6
-}]]></component>
-  <component name="ProjectId" id="2XU4whqIxPCJjIEgS2h017bS1gC" />
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2XH9gtZEqNqRG8L64pRAYQy85C0" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/cho97/Desktop/Payday_Java_Block-Game",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/RND-XXXX/Desktop/Block-Game&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.tools&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="c25c9696-a27f-4d09-b393-041060035e8f" name="Changes" comment="🐛 Fix: 코드 보완 및 테스트 완료" />
-      <created>1698670564792</created>
+      <changelist id="4f8ffbde-1f1e-44d2-8a59-f86cb5942fe8" name="Changes" comment="" />
+      <created>1698275253622</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1698670564792</updated>
-      <workItem from="1698670565837" duration="4330000" />
+      <updated>1698275253622</updated>
+      <workItem from="1698275254621" duration="26422000" />
+      <workItem from="1698306673574" duration="490000" />
+      <workItem from="1698360922624" duration="513000" />
+      <workItem from="1698361439869" duration="19978000" />
+      <workItem from="1698407074076" duration="1020000" />
+      <workItem from="1698463388987" duration="17889000" />
+      <workItem from="1698620338301" duration="9019000" />
+      <workItem from="1698706457051" duration="165000" />
+      <workItem from="1698706624423" duration="22359000" />
     </task>
+    <task id="LOCAL-00001" summary="✨ Feat: 선공 블럭 놓기 완료 및 메소드 모듈화">
+      <option name="closed" value="true" />
+      <created>1698298095031</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1698298095031</updated>
+    </task>
+    <task id="LOCAL-00002" summary="✨ Feat: 유효한 블럭 체크 완료">
+      <option name="closed" value="true" />
+      <created>1698306443611</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1698306443611</updated>
+    </task>
+    <task id="LOCAL-00003" summary="🐛 Fix: 코드 수정">
+      <option name="closed" value="true" />
+      <created>1698307102385</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1698307102385</updated>
+    </task>
+    <task id="LOCAL-00004" summary="✅ Test: 최적의 경우의 수 테스트 완료">
+      <option name="closed" value="true" />
+      <created>1698480872879</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1698480872879</updated>
+    </task>
+    <task id="LOCAL-00005" summary="✅ Test: 예외처리 완료 및 전체 테스트 완료 (version 1)">
+      <option name="closed" value="true" />
+      <created>1698641578155</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1698641578155</updated>
+    </task>
+    <task id="LOCAL-00006" summary="🧩 Algorithm: 알고리즘 개선 준비">
+      <option name="closed" value="true" />
+      <created>1698651865032</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1698651865032</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnknownFeatures">
+    <option featureType="dependencySupport" implementationName="executable:docker" />
+    <option featureType="dependencySupport" implementationName="executable:kubectl" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value=" Fix: 코드 보완 및 테스트 완료" />
-    <option name="LAST_COMMIT_MESSAGE" value=" Fix: 코드 보완 및 테스트 완료" />
+    <MESSAGE value="✨ Feat: 선공 블럭 놓기 완료 및 메소드 모듈화" />
+    <MESSAGE value="✨ Feat: 유효한 블럭 체크 완료" />
+    <MESSAGE value=" Fix: 코드 수정" />
+    <MESSAGE value="✅ Test: 최적의 경우의 수 테스트 완료" />
+    <MESSAGE value="✅ Test: 예외처리 완료 및 전체 테스트 완료 (version 1)" />
+    <MESSAGE value=" Algorithm: 알고리즘 개선 준비" />
+    <option name="LAST_COMMIT_MESSAGE" value=" Algorithm: 알고리즘 개선 준비" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

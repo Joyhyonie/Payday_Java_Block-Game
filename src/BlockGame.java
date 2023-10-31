@@ -227,15 +227,20 @@ public class BlockGame {
         for(int i = 0; i < allXys.size(); i++) {
             List<int[]> xys = allXys.get(i);
             for(int j = 0; j < xys.size(); j++) {
-                int casesCount = predictNext(i + 1, xys.get(j), board);
-                 System.out.println("현재 predictNext()를 타고 다녀온 블럭/좌표/경우의 수 => " + (i+1) + "/" + xys.get(j)[0] + xys.get(j)[1] + "/" + casesCount);
-                // casesCount가 이전보다 작다면, minCasesCount에 저장하고, minCasesCount가 저장된 시점의 index와 xy 또한 함께 변수에 저장
-                if (casesCount < minCasesCount) {
-                    minCasesCount = casesCount;
+                List<Integer> casesCountList = predictNext(i + 1, xys.get(j), board);
+                // System.out.println("현재 predictNext()를 타고 다녀온 블럭/좌표/경우의 수 => " + (i+1) + "/" + xys.get(j)[0] + xys.get(j)[1] + "/" + casesCount);
+                System.out.println("현재 casesCountList.size() ???? " + casesCountList.size() + "-------------------------------------");
+
+                // List.size()가 홀수일 때 (이기는 방법)
+                if (casesCountList.size() % 2 == 1) {
                     way[0] = i + 1;
                     way[1] = xys.get(j)[0];
                     way[2] = xys.get(j)[1];
+                  // 홀수인 List.size()가 없다면?
+                } else {
+                    System.out.println("헤헤 진건가");
                 }
+
             }
         }
 
@@ -245,9 +250,14 @@ public class BlockGame {
     }
 
     /* tempBoard를 활용하여 다음의 경우의 수를 예측하기 위한 메소드 */
-    public int predictNext(int blockNum, int[] xy, char[][] board) {
+    public List<Integer> predictNext(int blockNum, int[] xy, char[][] board) {
+        // ex: 1번 블럭을 board의 2,2위치에 놓을 때의 casesCount를 계산할 것.....
 
-        /* 재귀를 해야하는가? */
+        List<Integer> casesCountList = new ArrayList<>();
+        // return 해야하는 형태: {10, 5, 2, 0}
+        // 조건을 List.get(i)의 길이가 홀or짝인 것으로 판단해도 좋을듯? 0이면 해당 i는 종료되므로
+
+        int casesCount = 0;
 
         char[][] tempBoard = new char[SIZE][SIZE];
         // 2차원 배열 깊은 복사의 경우, for loop안에서 clone() 해야함
@@ -258,23 +268,32 @@ public class BlockGame {
         // setBoard()를 통해 tempBoard 완성
         setBoard(blockNum, xy[0], xy[1], tempBoard);
 
-        // tempBoard에서 가능한 모든 경우의 수 List
+        // tempAllXys: tempBoard에서 가능한 '블럭별' 모든 경우의 수 List
+        // xys: tempBoard에 tempBN을 넣을 수 있는 경우의 수
         List<List<int[]>> tempAllXys = new ArrayList<>();
-        // 경우의 수(갯수)
-        int casesCount = 0;
 
         // collectXys()를 통해 tempBoard의 경우의 수 구하기
         for(int tempBlockNum = 1; tempBlockNum <= 5; tempBlockNum++) {
             List<int[]> xys = collectXys(tempBlockNum, tempBoard);
             tempAllXys.add(xys);
-        }
-
-        for(int i = 0; i < tempAllXys.size(); i++) {
-            List<int[]> xys = tempAllXys.get(i);
             casesCount += xys.size();
         }
 
-        return casesCount;
+        casesCountList.add(casesCount);
+
+        // case가 더 있다면, predictNext() 재귀호출
+        if(casesCount != 0) {
+
+            for(int i = 0; i < tempAllXys.size(); i++) {
+                List<int[]> xys = tempAllXys.get(i);
+                for(int j = 0; j < xys.size(); j++) {
+                    List<Integer> tempCasesCountList = predictNext(i + 1, xys.get(j), tempBoard);
+                    System.out.println(j + "번째 predictNext() 재귀 호출 => " + (i+1) + "/" + xys.get(j)[0] + xys.get(j)[1] + "/" + casesCount);
+                }
+            }
+        }
+
+        return casesCountList;
 
     }
 
