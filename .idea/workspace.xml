@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4f8ffbde-1f1e-44d2-8a59-f86cb5942fe8" name="Changes" comment="🧩 Algorithm: 알고리즘 개선 준비">
+    <list default="true" id="4f8ffbde-1f1e-44d2-8a59-f86cb5942fe8" name="Changes" comment="🧩 Algorithm: 알고리즘 개선 진행중">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/BlockGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BlockGame.java" afterDir="false" />
     </list>
@@ -57,7 +57,8 @@
       <workItem from="1698463388987" duration="17889000" />
       <workItem from="1698620338301" duration="9019000" />
       <workItem from="1698706457051" duration="165000" />
-      <workItem from="1698706624423" duration="22359000" />
+      <workItem from="1698706624423" duration="23115000" />
+      <workItem from="1698792774625" duration="18152000" />
     </task>
     <task id="LOCAL-00001" summary="✨ Feat: 선공 블럭 놓기 완료 및 메소드 모듈화">
       <option name="closed" value="true" />
@@ -107,7 +108,15 @@
       <option name="project" value="LOCAL" />
       <updated>1698651865032</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="🧩 Algorithm: 알고리즘 개선 진행중">
+      <option name="closed" value="true" />
+      <created>1698738183688</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1698738183688</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -135,7 +144,8 @@
     <MESSAGE value="✅ Test: 최적의 경우의 수 테스트 완료" />
     <MESSAGE value="✅ Test: 예외처리 완료 및 전체 테스트 완료 (version 1)" />
     <MESSAGE value=" Algorithm: 알고리즘 개선 준비" />
-    <option name="LAST_COMMIT_MESSAGE" value=" Algorithm: 알고리즘 개선 준비" />
+    <MESSAGE value=" Algorithm: 알고리즘 개선 진행중" />
+    <option name="LAST_COMMIT_MESSAGE" value=" Algorithm: 알고리즘 개선 진행중" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
