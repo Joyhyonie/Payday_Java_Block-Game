@@ -3,6 +3,8 @@ import com.sun.security.jgss.GSSUtil;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
@@ -13,7 +15,7 @@ public class BlockGame {
     static char[][] board = new char[SIZE][SIZE];
     static int[][] blocks = {{1, 1, 1}, {0, 1, 1, 1}, {1, 0, 1, 1}, {1, 1, 1, 0}, {1, 1, 0, 1}};
     static String nickname;
-    static List<List<Integer>> allXysList = new ArrayList<>();  // 경우의 수 전체 List
+    List<List<int[]>> winningRoutes = new ArrayList<>(); // 각 시점, 이길 수 있는 루트를 저장하는 리스트
 
     // [임시]
     List<Integer> counts = new ArrayList<>();
@@ -166,13 +168,20 @@ public class BlockGame {
                 printBoard();
 
                 // setBoard 후, 상대방이 놓을 곳이 없다면, 나의 승리
-                result = findTheBestWay();
-                if(result[0] == 0 && result[1] == 0 && result[2] == 0) {
+                List<List<int[]>> xysList = new ArrayList<>();
+
+                for(int blockNum = 1; blockNum <= 5; blockNum++) {
+                    List<int[]> xys = collectXys(blockNum, board);
+                    if(!xys.isEmpty()) xysList.add(xys);
+                }
+
+                if(xysList.isEmpty()) {
                     System.out.println("=====================================");
                     System.out.println("\uD83E\uDD16 더이상 상대방의 블럭을 둘 공간이 없습니다. " + nickname + "님의 승리! \uD83C\uDF89");
                     System.out.println("============= GAME OVER ============");
                     break Running;
                 }
+
             }
 
         }
@@ -216,7 +225,6 @@ public class BlockGame {
     public int[] findTheBestWay() {
 
         List<int[]> xysList = new ArrayList<>(); // 현재 가능한 경우의 수 List
-
         // collectXys(): 경우의 수(좌표) 구하기
         for(int blockNum = 1; blockNum <= 5; blockNum++) {
             List<int[]> xys = collectXys(blockNum, board);
@@ -224,59 +232,74 @@ public class BlockGame {
         }
 
         // 재귀함수 호출
-        tempCallRecursive(xysList, board); // allXysList에 블럭별로 앞으로의 모든 경우의 수 저장
-//            allXysList.add();
+        callRecursive(xysList, board); // winningRoutes에 앞으로 이길 수 있는 모든 Route 저장
 
+        // map으로 가장 많이 등장한 route.get(0) 찾기
+        Map<List<int[]>, Integer> routeCount = new HashMap<>();
+        int maxCount = 0;
+        List<int[]> mostFrequentRoute = null;
 
-        // 블럭(xysList의 순서)당 좌표(xys의 요소) 하나하나, 승률 반환받기
-        int winRate = 0;        // 승률
-        int[] way = new int[3]; // 최선의 좌표
+        for(List<int[]> route : winningRoutes) {
+            List<int[]> key = List.of(route.get(0));
+            int count = routeCount.getOrDefault(key, 0) + 1;
+            routeCount.put(key, count);
+
+            if (count > maxCount) {
+                maxCount = count;
+                mostFrequentRoute = key;
+            }
+        }
 
         // way가 없을 경우, [0, 0, 0] 반환하여 패배
+        int[] way;
+        if(mostFrequentRoute == null) {
+            way = new int[]{0, 0, 0};
+        } else {
+            way = mostFrequentRoute.get(0);
+        }
+
         return way;
 
     }
+    int count = 0;
 
-    /* tempBoard를 활용하여 특정 블럭/좌표의 승률을 반환하는 메소드 */
-    public int calculator(int blockNum, int[] xy, char[][] board) {
-
-        // 승률 & 경우의 수
-        int result = 0;
-
-        // 승률(이길 수 있는 경우의 수/모든 경우의 수) 계산
-
-        return result;
-
+    public void callRecursive(List<int[]> xysList, char[][] board) {
+        winningRoutes.clear();
+        callRecursive(xysList, board, new ArrayList<>());
     }
 
-    public void tempCallRecursive (List<int[]> xysList1, char[][] board1) {
-        // 반복해야할 것
-        // 1. 블럭/좌표로 tempBoard를 만든다
-        // 2. 그때의 board에서의 경우의 수를 찾는다
-        // 3. for문의 끝에서 List를 저장한다
+    public void callRecursive (List<int[]> xysList, char[][] board, List<int[]> currentRoute) {
 
-        // xysList1: 현재 둘 수 있는 요소들
-        List<int[]> tempXysList = new ArrayList<>();
+        for(int[] xy : xysList) {
 
-        /* -------------------------------------------------------------- */
-        for(int[] xy1 : xysList1) { // xy: 가능한 bxy
-            int casesCount = 0;
+            char[][] tempBoard = copyBoard(board);
+            setBoard(xy[0], xy[1], xy[2], tempBoard); // 100을 두엇을때의
+            // xysList: 현재 둘 수 있는 요소들
+            List<int[]> tempXysList = new ArrayList<>();
 
-            char[][] tempBoard1 = copyBoard(board1);
-            setBoard(xy1[0], xy1[1], xy1[2], tempBoard1);
-            List<int[]> tempXys = collectXys(xy1[0], tempBoard1); // 현재 xy1[0]이 1이라 1번 블럭의 케이스만 count 되는 중. 수정 필요
-            tempXysList.addAll(tempXys);
-            casesCount += tempXysList.size(); // 해당 좌표에서 가능한 casesCount
-            counts.add(casesCount);
+            for(int blockNum = 1; blockNum <= 5; blockNum++) {
+                List<int[]> tempXys = collectXys(blockNum, tempBoard);
+                tempXysList.addAll(tempXys); // 또 그것의 가능한 모든 좌표
+            }
 
-            //        tempCallRecursive(tempXysList, board);
+            // tempXysList에 요소가 존재하지 않을 시(더이상 둘 곳이 없을 시), new Route를 List에 저장
+            if(tempXysList.isEmpty()) {
+                count++; // [임시] 현재 좌표의 모든 경우의 수 count
+                List<int[]> tempCurrentRoute = new ArrayList<>(currentRoute);
+                tempCurrentRoute.add(xy);
+                // Route의 size가 홀수인 것이 이기는 Route이므로, 검사 후 저장
+                if(tempCurrentRoute.size() % 2 == 1) {
+                    winningRoutes.add(tempCurrentRoute);
+                }
+            } else {
+                List<int[]> tempCurrentRoute = new ArrayList<>(currentRoute);
+                tempCurrentRoute.add(xy);
+                callRecursive(tempXysList, tempBoard, tempCurrentRoute); // 재귀 호출 시, 기존의 currentRoute와 함께 전달
+            }
         }
 
     }
 
-    public void callRecursive(int blockNum, List<int[]> xys, char[][] board) {
-
-    }
 
     /* 각 block별, 현재 board에 둘 수 있는 좌표(경우의 수)들을 List로 반환하기 위한 메소드 */
     public List<int[]> collectXys(int blockNum, char[][] board) {
