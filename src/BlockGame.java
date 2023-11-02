@@ -1,4 +1,4 @@
-import org.w3c.dom.ls.LSOutput;
+import com.sun.security.jgss.GSSUtil;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -13,6 +13,10 @@ public class BlockGame {
     static char[][] board = new char[SIZE][SIZE];
     static int[][] blocks = {{1, 1, 1}, {0, 1, 1, 1}, {1, 0, 1, 1}, {1, 1, 1, 0}, {1, 1, 0, 1}};
     static String nickname;
+    static List<List<Integer>> allXysList = new ArrayList<>();  // 경우의 수 전체 List
+
+    // [임시]
+    List<Integer> counts = new ArrayList<>();
 
     public void startGame() {
 
@@ -211,67 +215,66 @@ public class BlockGame {
     /* 최선의 블럭 및 좌표를 찾아내기 위한 메소드 */
     public int[] findTheBestWay() {
 
-        // 현재 가능한 모든 경우의 수 List
-        List<List<int[]>> allXys = new ArrayList<>();
+        List<int[]> xysList = new ArrayList<>(); // 현재 가능한 경우의 수 List
 
-        // 각 블럭마다 반복문을 돌려서 경우의 수(List.size())를 구해야 하는 메소드를 따로 선언하기 (tempBoard에 넣고나서의 경우의 수도 구해야하므로)
+        // collectXys(): 경우의 수(좌표) 구하기
         for(int blockNum = 1; blockNum <= 5; blockNum++) {
             List<int[]> xys = collectXys(blockNum, board);
-            allXys.add(xys);
+            xysList.addAll(xys);
         }
 
-        // 블럭(allXys의 순서)당 좌표(xys의 요소) 하나하나, 승률 및 경우의 수 반환받기
-        int[] minimum = {0, 0};
-        int[] way = new int[3];
+        // 재귀함수 호출
+        tempCallRecursive(xysList, board); // allXysList에 블럭별로 앞으로의 모든 경우의 수 저장
+//            allXysList.add();
 
-        for(int i = 0; i < allXys.size(); i++) {
-            List<int[]> xys = allXys.get(i);
-            for(int j = 0; j < xys.size(); j++) {
-                int[] result = calculator(i + 1, xys.get(j), board);
-                System.out.println("현재 predictNext()를 타고 다녀온 블럭/좌표 => " + (i+1) + "/" + xys.get(j)[0] + xys.get(j)[1]);
-                if(minimum[1] < winningRate) {
 
-                }
-            }
-        }
+        // 블럭(xysList의 순서)당 좌표(xys의 요소) 하나하나, 승률 반환받기
+        int winRate = 0;        // 승률
+        int[] way = new int[3]; // 최선의 좌표
 
         // way가 없을 경우, [0, 0, 0] 반환하여 패배
         return way;
 
     }
 
-    /* tempBoard를 활용하여 다음의 경우의 수를 예측하기 위한 메소드 */
-    // predictNext()는 {}
-    public int[] calculator(int blockNum, int[] xy, char[][] board) {
+    /* tempBoard를 활용하여 특정 블럭/좌표의 승률을 반환하는 메소드 */
+    public int calculator(int blockNum, int[] xy, char[][] board) {
 
         // 승률 & 경우의 수
-        int[] minimum = {0, 0};
+        int result = 0;
 
-        char[][] tempBoard = new char[SIZE][SIZE];
-        // 2차원 배열 깊은 복사의 경우, for loop안에서 clone() 해야함
-        for(int i = 0; i < board.length; i++) {
-            tempBoard[i] = board[i].clone();
+        // 승률(이길 수 있는 경우의 수/모든 경우의 수) 계산
+
+        return result;
+
+    }
+
+    public void tempCallRecursive (List<int[]> xysList1, char[][] board1) {
+        // 반복해야할 것
+        // 1. 블럭/좌표로 tempBoard를 만든다
+        // 2. 그때의 board에서의 경우의 수를 찾는다
+        // 3. for문의 끝에서 List를 저장한다
+
+        // xysList1: 현재 둘 수 있는 요소들
+        List<int[]> tempXysList = new ArrayList<>();
+
+        /* -------------------------------------------------------------- */
+        for(int[] xy1 : xysList1) { // xy: 가능한 bxy
+            int casesCount = 0;
+
+            char[][] tempBoard1 = copyBoard(board1);
+            setBoard(xy1[0], xy1[1], xy1[2], tempBoard1);
+            List<int[]> tempXys = collectXys(xy1[0], tempBoard1); // 현재 xy1[0]이 1이라 1번 블럭의 케이스만 count 되는 중. 수정 필요
+            tempXysList.addAll(tempXys);
+            casesCount += tempXysList.size(); // 해당 좌표에서 가능한 casesCount
+            counts.add(casesCount);
+
+            //        tempCallRecursive(tempXysList, board);
         }
 
-        // setBoard()를 통해 tempBoard 완성
-        setBoard(blockNum, xy[0], xy[1], tempBoard);
+    }
 
-        // collectXys()를 통해 tempBoard의 경우의 수 구하기
-        for(int tempBlockNum = 1; tempBlockNum <= 5; tempBlockNum++) {
-            // xys: 블럭별 경우의 수 List
-            List<int[]> xys = collectXys(tempBlockNum, tempBoard);
-
-            // xys에 담긴 좌표가 존재한다면,
-            if(!xys.isEmpty()) {
-                // 그 tempXy마다의 경우의 수 예측
-                for(int[] tempXy : xys) {
-                    predictNext(tempBlockNum, tempXy, tempBoard);
-                }
-            }
-            casesCount += xys.size(); // 모든 경우의 수
-        }
-
-        return minimum;
+    public void callRecursive(int blockNum, List<int[]> xys, char[][] board) {
 
     }
 
@@ -283,19 +286,19 @@ public class BlockGame {
         if(blockNum == 1) {
             for(int i = 0; i < 5; i++) {
                 for(int j = 0; j < 3; j++) {
-                    if(board[i][j] == 'o' && board[i][j+1] == 'o' && board[i][j+2] == 'o') { int[] xy = {i, j}; xys.add(xy); }
+                    if(board[i][j] == 'o' && board[i][j+1] == 'o' && board[i][j+2] == 'o') { int[] bxy = {blockNum, i, j}; xys.add(bxy); }
                 }
             }
         } else {
             for(int i = 0; i < 4; i++) {
                 for(int j = 0; j < 4; j++) {
                     if(blockNum == 2) {
-                        if(board[i][j+1] == 'o' && board[i+1][j] == 'o' && board[i+1][j+1] == 'o') { int[] xy = {i, j}; xys.add(xy); }
+                        if(board[i][j+1] == 'o' && board[i+1][j] == 'o' && board[i+1][j+1] == 'o') { int[] bxy = {blockNum, i, j}; xys.add(bxy); }
                     } else if(board[i][j] == 'o') {
                         switch (blockNum) {
-                            case 3: if(board[i+1][j] == 'o' && board[i+1][j+1] == 'o') { int[] xy = {i, j}; xys.add(xy); } break;
-                            case 4: if(board[i][j+1] == 'o' && board[i+1][j] == 'o') { int[] xy = {i, j}; xys.add(xy); } break;
-                            case 5: if(board[i][j+1] == 'o' && board[i+1][j+1] == 'o') { int[] xy = {i, j}; xys.add(xy); } break;
+                            case 3: if(board[i+1][j] == 'o' && board[i+1][j+1] == 'o') { int[] bxy = {blockNum, i, j}; xys.add(bxy); } break;
+                            case 4: if(board[i][j+1] == 'o' && board[i+1][j] == 'o') { int[] bxy = {blockNum, i, j}; xys.add(bxy); } break;
+                            case 5: if(board[i][j+1] == 'o' && board[i+1][j+1] == 'o') { int[] bxy = {blockNum, i, j}; xys.add(bxy); } break;
                         }
                     }
                 }
@@ -303,6 +306,18 @@ public class BlockGame {
         }
 
         return xys;
+
+    }
+
+    public char[][] copyBoard(char[][] board) {
+
+        char[][] tempBoard = new char[SIZE][SIZE];
+        // 2차원 배열 깊은 복사의 경우, for loop안에서 clone() 해야함
+        for(int i = 0; i < SIZE; i++) {
+            tempBoard[i] = board[i].clone();
+        }
+
+        return tempBoard;
 
     }
 
