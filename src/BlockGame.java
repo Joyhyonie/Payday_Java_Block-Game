@@ -15,7 +15,7 @@ public class BlockGame {
     static char[][] board = new char[SIZE][SIZE];
     static int[][] blocks = {{1, 1, 1}, {0, 1, 1, 1}, {1, 0, 1, 1}, {1, 1, 1, 0}, {1, 1, 0, 1}};
     static String nickname;
-    static List<List<int[]>> winningRoutes = new ArrayList<>(); // 각 시점, 이길 수 있는 루트를 저장하는 리스트
+    List<List<int[]>> winningRoutes = new ArrayList<>(); // 각 시점, 이길 수 있는 루트를 저장하는 리스트
 
 
     public void startGame() {
@@ -232,8 +232,8 @@ public class BlockGame {
             xysList.addAll(xys);
         }
 
-        // 재귀함수 호출
-        callRecursive(xysList, board); // winningRoutes에 앞으로 이길 수 있는 모든 Route 저장
+        // winningRoutes에 앞으로 이길 수 있는 모든 Route 저장하는 callRecursive() 호출
+        callRecursive(xysList, board);
 
         // map으로 가장 많이 등장한 route.get(0) 찾기
         Map<List<int[]>, Integer> routeCount = new HashMap<>();
@@ -285,13 +285,13 @@ public class BlockGame {
         for(int[] xy : xysList) {
 
             char[][] tempBoard = copyBoard(board);
-            setBoard(xy[0], xy[1], xy[2], tempBoard); // 100을 두엇을때의
+            setBoard(xy[0], xy[1], xy[2], tempBoard);
             // xysList: 현재 둘 수 있는 요소들
             List<int[]> tempXysList = new ArrayList<>();
 
             for(int blockNum = 1; blockNum <= 5; blockNum++) {
                 List<int[]> tempXys = collectXys(blockNum, tempBoard);
-                tempXysList.addAll(tempXys); // 또 그것의 가능한 모든 좌표
+                tempXysList.addAll(tempXys); // 현재 xy의 가능한 모든 좌표
             }
 
             // tempXysList에 요소가 존재하지 않을 시(더이상 둘 곳이 없을 시), new Route를 List에 저장
@@ -299,9 +299,7 @@ public class BlockGame {
                 List<int[]> tempCurrentRoute = new ArrayList<>(currentRoute);
                 tempCurrentRoute.add(xy);
                 // Route의 size가 홀수인 것이 이기는 Route이므로, 검사 후 저장
-                if(tempCurrentRoute.size() % 2 == 1) {
-                    winningRoutes.add(tempCurrentRoute);
-                }
+                if(tempCurrentRoute.size() % 2 == 1) winningRoutes.add(tempCurrentRoute);
             } else {
                 List<int[]> tempCurrentRoute = new ArrayList<>(currentRoute);
                 tempCurrentRoute.add(xy);
