@@ -15,10 +15,8 @@ public class BlockGame {
     static char[][] board = new char[SIZE][SIZE];
     static int[][] blocks = {{1, 1, 1}, {0, 1, 1, 1}, {1, 0, 1, 1}, {1, 1, 1, 0}, {1, 1, 0, 1}};
     static String nickname;
-    List<List<int[]>> winningRoutes = new ArrayList<>(); // 각 시점, 이길 수 있는 루트를 저장하는 리스트
+    static List<List<int[]>> winningRoutes = new ArrayList<>(); // 각 시점, 이길 수 있는 루트를 저장하는 리스트
 
-    // [임시]
-    List<Integer> counts = new ArrayList<>();
 
     public void startGame() {
 
@@ -120,14 +118,17 @@ public class BlockGame {
                     System.out.print(": ");
                     number = sc.nextInt();
 
-                    // 유효성 검사 (길이)
-                    if((int)(Math.log10(number)+1) != 3) {
-                        boolean check = true;
-                        while(check == true) {
+                    int[] firstArrNum = Stream.of(String.valueOf(number).split("")).mapToInt(Integer::parseInt).toArray();
+
+                    // 유효성 검사 (길이 및 좌표)
+                    if((int)(Math.log10(number)+1) != 3 || firstArrNum[0] > 5 || firstArrNum[1] > 4 || firstArrNum[2] > 4) {
+                        while(true) {
                             System.out.println("\uD83E\uDD16 번호가 올바르지 않습니다. 다시 입력해주세요.");
                             System.out.print(": ");
                             number = sc.nextInt();
-                            check = (int)(Math.log10(number)+1) != 3;
+                            int[] nextArrNum = Stream.of(String.valueOf(number).split("")).mapToInt(Integer::parseInt).toArray();
+                            // 아래의 조건을 충족하는 경우에만, break;
+                            if((int)Math.log10(number)+1 == 3 && nextArrNum[0] <= 5 && nextArrNum[1] <= 4 && nextArrNum[2] <= 4) break;
                         }
                     }
                     break;
@@ -252,8 +253,18 @@ public class BlockGame {
 
         // way가 없을 경우, [0, 0, 0] 반환하여 패배
         int[] way;
+        // mostFrequentRoute가 null이라는 것은, 이길 수 있는 경우의 수가 더이상 존재하지않음을 의미. 하지만 마지막까지 수를 둬야하므로 현재 둘 수 있는 좌표 찾기
         if(mostFrequentRoute == null) {
-            way = new int[]{0, 0, 0};
+            List<List<int[]>> losingXysList = new ArrayList<>();
+            for(int blockNum = 1; blockNum <= 5; blockNum++) {
+                List<int[]> losingXys = collectXys(blockNum, board);
+                if(!losingXys.isEmpty()) losingXysList.add(losingXys); // losingXys.size()가 0인 경우에도 losingXysList에 담기므로, 조건문 설정
+            }
+            if(!losingXysList.isEmpty()) {
+                way = new int[]{losingXysList.get(0).get(0)[0], losingXysList.get(0).get(0)[1], losingXysList.get(0).get(0)[2]};
+            } else {
+                way = new int[]{0, 0, 0};
+            }
         } else {
             way = mostFrequentRoute.get(0);
         }
@@ -261,13 +272,14 @@ public class BlockGame {
         return way;
 
     }
-    int count = 0;
-
+    
+    /* findTheBestWay()에서 직접 호출하는 callRecursive() 메소드 */
     public void callRecursive(List<int[]> xysList, char[][] board) {
-        winningRoutes.clear();
+        winningRoutes.clear(); // 이전 시점의 winningRoutes 제거
         callRecursive(xysList, board, new ArrayList<>());
     }
 
+    /* callRecursive() 내부에서 재귀 호출되는 메소드 */
     public void callRecursive (List<int[]> xysList, char[][] board, List<int[]> currentRoute) {
 
         for(int[] xy : xysList) {
@@ -284,7 +296,6 @@ public class BlockGame {
 
             // tempXysList에 요소가 존재하지 않을 시(더이상 둘 곳이 없을 시), new Route를 List에 저장
             if(tempXysList.isEmpty()) {
-                count++; // [임시] 현재 좌표의 모든 경우의 수 count
                 List<int[]> tempCurrentRoute = new ArrayList<>(currentRoute);
                 tempCurrentRoute.add(xy);
                 // Route의 size가 홀수인 것이 이기는 Route이므로, 검사 후 저장

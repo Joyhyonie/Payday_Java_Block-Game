@@ -76,6 +76,7 @@
       <workItem from="1698792774625" duration="18371000" />
       <workItem from="1698879546450" duration="28988000" />
       <workItem from="1698920847973" duration="17124000" />
+      <workItem from="1698966009169" duration="5630000" />
     </task>
     <task id="LOCAL-00001" summary="✨ Feat: 선공 블럭 놓기 완료 및 메소드 모듈화">
       <option name="closed" value="true" />
@@ -172,22 +173,6 @@
     <MESSAGE value=" Algorithm: 알고리즘 개선 진행중" />
     <MESSAGE value=" Algorithm: 알고리즘 개선 진행중" />
     <option name="LAST_COMMIT_MESSAGE" value=" Algorithm: 알고리즘 개선 진행중" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/BlockGame.java</url>
-          <line>177</line>
-          <option name="timeStamp" value="95" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/BlockGame.java</url>
-          <line>174</line>
-          <option name="timeStamp" value="96" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
